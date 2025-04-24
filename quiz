@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Quiz Maker</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 800px; margin: 20px auto; padding: 20px; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1, h2 { text-align: center; }
+    .question { margin: 20px 0; }
+    .option { margin: 5px 0; }
+    .btn { background: #28a745; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-top: 10px; }
+    .btn:hover { background: #218838; }
+    #result { text-align: center; font-size: 18px; margin-top: 20px; font-weight: bold; }
+    .pass { color: green; }
+    .fail { color: red; }
+    .leaderboard { margin-top: 30px; }
+  </style>
+
+    
+</link>
+</head>
+<body>
+<div class="container">
+  <h1>Online Quiz Maker</h1>
+  <div id="quiz"></div>
+  <button class="btn" onclick="submitQuiz()">Submit</button>
+  <div id="result"></div>
+  <div class="leaderboard">
+    <h2>Leaderboard</h2>
+    <ol id="leaderboardList"></ol>
+  </div>
+</div>
+<script>
+const quizData = [
+  {
+    question: "What does HTML stand for?",
+    options: ["Hyper Text Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "None of these"],
+    answer: 0
+  },
+  {
+    question: "Which tag is used to create a hyperlink in HTML?",
+    options: ["&lt;a&gt;", "&lt;link&gt;", "&lt;href&gt;", "&lt;hyperlink&gt;"],
+    answer: 0
+  },
+  {
+    question: "How do you declare a variable in JavaScript?",
+    options: ["v myVar = 5;", "var myVar = 5;", "variable myVar = 5;", "myVar := 5;"],
+    answer: 1
+  },
+  {
+    question: "Which property is used to change the background color in CSS?",
+    options: ["bgcolor", "background-color", "color-bg", "bg-color"],
+    answer: 1
+  },
+  {
+    question: "Which symbol is used for comments in JavaScript?",
+    options: ["//", "&lt;!-- --&gt;", "**", "/* */"],
+    answer: 0
+  }
+];
+
+  
+
+  function loadQuiz() {
+    const quiz = document.getElementById('quiz');
+    quiz.innerHTML = '';
+    quizData.forEach((q, i) => {
+      const questionEl = document.createElement('div');
+      questionEl.className = 'question';
+      questionEl.innerHTML = `<h3>${i + 1}. ${q.question}</h3>`;
+      q.options.forEach((option, index) => {
+        questionEl.innerHTML += `
+          <div class="option">
+            <label>
+              <input type="radio" name="question${i}" value="${index}">
+              ${option}
+            </label>
+          </div>`;
+      });
+      quiz.appendChild(questionEl);
+    });
+  }
+
+  function submitQuiz() {
+    const radios = document.querySelectorAll('input[type=radio]:checked');
+    let score = 0;
+    radios.forEach((radio, index) => {
+      if (parseInt(radio.value) === quizData[index].answer) {
+        score++;
+      }
+    });
+    const result = document.getElementById('result');
+    const passMark = 3;
+    if (score >= passMark) {
+      result.innerHTML = `You scored ${score}/5. <span class="pass">Pass ✅</span>`;
+    } else {
+      result.innerHTML = `You scored ${score}/5. <span class="fail">Fail ❌</span>`;
+    }
+    updateLeaderboard(score);
+  }
+
+  function updateLeaderboard(score) {
+    const list = document.getElementById('leaderboardList');
+    const name = prompt("Enter your name for the leaderboard:");
+    if (name) {
+      const listItem = document.createElement('li');
+      listItem.textContent = `${name}: ${score}/5`;
+      list.appendChild(listItem);
+    }
+  }
+
+  loadQuiz();
+</script>
+</body>
+</html>
